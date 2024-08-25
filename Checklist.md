@@ -8,7 +8,7 @@
 - [ ] basic tests
 
 ## Server
-- [ ] start basic websocket server
+- [x] start basic websocket server
 - [ ] add authentication mechanism
 
 ## Client
@@ -16,3 +16,6 @@
 - [x] add simple landing page
 - [ ] add login / signup page
 - [ ] add rules pages
+
+## Tests
+- [x] add ping test for server
