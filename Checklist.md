@@ -12,6 +12,7 @@
 - [ ] add authentication mechanism
 
 ## Client
-- [ ] start basic next app
-- [ ] add simple landing page
+- [x] start basic next app
+- [x] add simple landing page
 - [ ] add login / signup page
+- [ ] add rules pages
