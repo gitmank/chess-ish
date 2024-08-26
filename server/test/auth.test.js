@@ -7,7 +7,6 @@ const VALID_PING_RESPONSE = "pong";
 const VALID_AUTH_ERROR = "Authentication error";
 const VALID_USERNAME = "test";
 const JWT_SECRET = process.env.JWT_SECRET
-const e = require("cors");
 const jwt = require('jsonwebtoken');
 const VALID_TOKEN = jwt.sign({ username: VALID_USERNAME }, JWT_SECRET, { expiresIn: '1m' });
 
