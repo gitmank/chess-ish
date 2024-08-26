@@ -1,7 +1,7 @@
 "use client";
 
 // imports
-import { useAuth } from "@/components/hooks/useAuth";
+import { useAuth } from "@/utilities/hooks/useAuth";
 import Loading from "@/components/views/Loading";
 import Login from "@/components/views/Login";
 import Redirect from "@/components/views/Redirect";

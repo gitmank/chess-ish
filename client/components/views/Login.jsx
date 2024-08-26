@@ -60,7 +60,7 @@ export default function Login() {
             setError(message);
         } else {
             setStatus(STATUS.SUCCESS);
-            setTimeout(() => router.push("/dasboard"), 1000);
+            setTimeout(() => router.push("/dashboard"), 1000);
         }
     };
 
