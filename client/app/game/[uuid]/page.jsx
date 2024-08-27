@@ -36,6 +36,10 @@ export default function Page() {
         gameSocket.emit("join-game", { uuid });
         // listen for join game response
         gameSocket.on("join-game-response", (data) => {
+            if (data.status === "error") {
+                alert(data.message);
+                return;
+            }
             setGame(data?.game || {});
             setPieces(data?.pieces || []);
         });
@@ -45,6 +49,7 @@ export default function Page() {
             setPlays([]);
         });
         gameSocket.on("update-game", (data) => {
+            console.log(data.game.currentTurn);
             setGame(data.game);
             setSelectedPiece(null);
             setPlays([]);
@@ -76,7 +81,7 @@ export default function Page() {
         );
     }
 
-    if (pieces.length !== 10) {
+    if (game.moves.length < 10) {
         return (
             <main className="flex flex-col justify-center items-center h-screen w-full p-4 text-center">
                 <div className="flex flex-col space-y-8 justify-center items-center h-full w-full text-center border-b">
@@ -102,8 +107,9 @@ export default function Page() {
             <div className="flex flex-col justify-center items-center h-full w-full text-center gap-4">
                 <h1 className="text-4xl">Game</h1>
                 <p>
-                    {isConnected ? " 🟢 " : " 🔴 "}
-                    Room: {game?.name}
+                    {isConnected
+                        ? ` 🟢 Room: ${game?.name} `
+                        : " 🔴 Refresh Page "}
                 </p>
                 <div className="flex flex-row w-max h-max gap-4 items-center justify-between">
                     <h1>Turn</h1>
@@ -143,26 +149,28 @@ export default function Page() {
                         Select a piece to see moves
                     </p>
                 )}
-                {selectedPiece && selectedPiece.owner === username && (
-                    <div className="flex flex-col gap-4">
-                        <p>Selected Piece: {selectedPiece.type}</p>
-                        {plays.length > 0 && (
-                            <div className="flex flex-row gap-4 items-center w-full h-max flex-wrap">
-                                <h1>Plays</h1>
-                                {plays.map((play, index) => (
-                                    <div
-                                        key={index}
-                                        className="bg-blue-400 p-2 rounded-md"
-                                    >
-                                        {selectedPiece.name}
-                                        {" ->"}
-                                        {play.location.join(",")}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                )}
+                {selectedPiece &&
+                    selectedPiece.owner === username &&
+                    game.currentTurn === username && (
+                        <div className="flex flex-col gap-4">
+                            <p>Selected Piece: {selectedPiece.type}</p>
+                            {plays.length > 0 && (
+                                <div className="flex flex-row gap-4 items-center w-full h-max flex-wrap">
+                                    <h1>Plays</h1>
+                                    {plays.map((play, index) => (
+                                        <div
+                                            key={index}
+                                            className="bg-blue-400 p-2 rounded-md"
+                                        >
+                                            {selectedPiece.name}
+                                            {" ->"}
+                                            {play.location.join(",")}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
             </div>
             <Chat gameSocket={gameSocket} game={game} />
         </main>

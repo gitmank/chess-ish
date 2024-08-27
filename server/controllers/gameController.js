@@ -60,6 +60,40 @@ const joinGame = async (socket, data) => {
             return;
         }
 
+        // rejoin if user is in game
+        if (game.players.includes(socket.username)) {
+            socket.join(game.uuid);
+            socket.emit("join-game-response", {
+                status: "success",
+                message: `joined - ${game.name}`,
+                roomID: game.uuid,
+                game: game,
+                pieces: await Piece.find({ game: game.uuid }),
+            });
+            return;
+        }
+
+        // check if user has open games
+        const userGame = await Game.find({ players: socket.username, endedAt: null });
+        if (userGame.length) {
+            socket.emit("join-game-response", {
+                status: "error",
+                message: `already in a game - ${userGame[0].name}`,
+                roomID: userGame[0].uuid,
+            });
+            return;
+        }
+
+        // check if game is full
+        if (game.players.length === 2) {
+            socket.emit("join-game-response", {
+                status: "error",
+                message: "game full, try spectate",
+                roomID: data.uuid,
+            });
+            return;
+        }
+
         // check if user is in game
         if (game.players.includes(socket.username)) {
             socket.join(game.uuid);
@@ -183,6 +217,8 @@ const setPieces = async (socket, data) => {
                 location: [userStartRow, i],
             });
             await newPiece.save();
+            game.moves.push({ player: socket.username, piece: data.pieces[i], location: [userStartRow, i] });
+            await game.save();
         }
 
         // fetch all pieces
@@ -217,7 +253,7 @@ const setPieces = async (socket, data) => {
 const forceEndGame = async (socket, data) => {
     try {
         await connectToMongo();
-        await Game.updateOne({ uuid: data.uuid }, { endedAt: new Date().toISOString() });
+        await Game.updateOne({ uuid: data.uuid }, { endedAt: new Date().toISOString(), winner: "force-ended" });
         const games = await Game.find({ players: socket.username });
         socket.emit("list-games-response", {
             status: "success",
@@ -288,7 +324,12 @@ const makeMove = async (socket, data) => {
 
         // check if move is valid
         const pieces = await Piece.find({ game: game.uuid });
-        const moves = movesCalculator(piece, pieces);
+        const [moves, piecesTaken] = movesCalculator(piece, pieces);
+        piecesTaken.map(async (piece) => {
+            if (piece.location[0] === data.location[0] && piece.location[1] === data.location[1]) {
+                await Piece.deleteOne(piece);
+            }
+        })
         const move = moves.filter(m => m[0] === data.location[0] && m[1] === data.location[1]);
         if (!move.length) {
             socket.emit("make-move-response", {
@@ -313,8 +354,17 @@ const makeMove = async (socket, data) => {
             roomID: data.uuid,
         });
 
-        // send update to all in room
         const latestPieces = await Piece.find({ game: game.uuid });
+
+        // send update to current socket 
+        socket.emit("update-pieces", {
+            status: "success",
+            message: `${socket.username} made move`,
+            roomID: game.uuid,
+            pieces: latestPieces,
+        })
+
+        // send update to all in room
         socket.to(game.uuid).emit("update-pieces", {
             status: "success",
             message: `${socket.username} made move`,
@@ -331,6 +381,11 @@ const makeMove = async (socket, data) => {
             game: latestGame,
         });
 
+        // update moves 
+        await Game.updateOne({ uuid: data.uuid }, { moves: [...game.moves, { player: socket.username, piece: piece.name, location: data.location }] });
+
+        // check game won
+        const gamePieces = latestPieces.filter(p => p.owner === socket.username);
     }
     catch (error) {
         console.log("error making move:", error.toString());

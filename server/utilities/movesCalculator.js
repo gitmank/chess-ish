@@ -16,6 +16,7 @@ const KILL_TYPES = {
 
 const movesCalculator = (selectedPiece, pieces) => {
     const validMoves = [];
+    const piecesTaken = [];
     const allowedMoves = ALLOWED_MOVES[selectedPiece.type];
 
     allowedMoves.forEach((move) => {
@@ -37,6 +38,7 @@ const movesCalculator = (selectedPiece, pieces) => {
             // check if destination is occupied by own piece
             if (destination && destination.owner !== selectedPiece.owner) {
                 validMoves.push([newX, newY]);
+                piecesTaken.push(destination);
             }
             if (!destination) {
                 validMoves.push([newX, newY]);
@@ -110,7 +112,7 @@ const movesCalculator = (selectedPiece, pieces) => {
             }
         }
     });
-    return validMoves;
+    return [validMoves, piecesTaken];
 };
 
 module.exports = movesCalculator;
