@@ -8,7 +8,6 @@ const COOKIE_NAME = "user_session";
 const COOKIE_OPTIONS = {
     httpOnly: true,
     sameSite: "strict",
-    secure: true,
     maxAge: 5 * 24 * 60 * 60, // 5 days
     priority: "High",
 };

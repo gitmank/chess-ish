@@ -8,7 +8,7 @@ const STATUS = {
 };
 
 export const useAuth = () => {
-    const [user, setUser] = useState(null);
+    const [username, setUsername] = useState(null);
     const [status, setStatus] = useState(STATUS.LOADING);
 
     useEffect(() => {
@@ -20,8 +20,7 @@ export const useAuth = () => {
             const response = await fetch("/api/auth/user");
             if (response.status === 200) {
                 const user = await response.json();
-                console.log(user);
-                setUser(user);
+                setUsername(user.username);
                 setStatus(STATUS.AUTHENTICATED);
             } else {
                 setStatus(STATUS.UNAUTHENTICATED);
@@ -32,5 +31,5 @@ export const useAuth = () => {
         }
     };
 
-    return [user, status];
+    return [username, status];
 };
