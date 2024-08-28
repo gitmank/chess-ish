@@ -7,7 +7,7 @@ require("dotenv").config();
 
 // socket.io server options
 const PORT = process.env.PORT || 4000;
-const ALLOWED_ORIGINS = "http://localhost:3000"; // todo - update with deployed client url
+const ALLOWED_ORIGINS = process.env.CLIENT_URL; // todo - update with deployed client url
 const ALLOWED_METHODS = ["GET", "POST"];
 const options = {
     cors: {
