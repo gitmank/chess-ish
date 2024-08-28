@@ -1,5 +1,15 @@
 # hitwicket_task_Manomay_21BCY10052
 chess-like game with 5x5 board
+> [!NOTE]
+> This project is deployed at https://chess-ish.manomay.co  
+> To run it locally, follow the below steps
+
+## Run on local machine
+1. Edit the sample environment files - `client/.env.local` and `server/.env`.
+2. Run `npm install` in `/client` and `/server`.
+3. Start the Next.js app by running `npm run dev` in `/client`.
+4. Start the socket.io server by running `npm start` in `/server`.
+5. You need to have Node.js and npm installed to run the project.
 
 ## Game Rules
 - 5x5 board with 2 players
