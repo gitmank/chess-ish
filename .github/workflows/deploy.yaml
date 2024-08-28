@@ -17,7 +17,6 @@ jobs:
                   username: ${{ secrets.USERNAME }}
                   password: ${{ secrets.PASSWORD }}
                   script: |
-                      exec bash \-l
                       cd /srv/hitwicket_task_Manomay_21BCY10052
                       git pull
                       cd /srv/hitwicket_task_Manomay_21BCY10052/client
