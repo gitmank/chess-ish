@@ -284,6 +284,13 @@ const forceEndGame = async (socket, data) => {
             roomID: data.uuid,
             game: game,
         });
+
+        socket.emit("update-game", {
+            status: "success",
+            message: "game ended",
+            roomID: data.uuid,
+            game: game,
+        });
     } catch (error) {
         console.log("error ending game:", error.toString());
         socket.emit("force-end-game-response", {
@@ -394,6 +401,14 @@ const makeMove = async (socket, data) => {
         socket.to(game.uuid).emit("update-game", {
             status: "success",
             message: `${socket.username} made move`,
+            roomID: game.uuid,
+            game: latestGame,
+        });
+
+        // send game update to current socket
+        socket.emit("update-game", {
+            status: "success",
+            message: "move made",
             roomID: game.uuid,
             game: latestGame,
         });

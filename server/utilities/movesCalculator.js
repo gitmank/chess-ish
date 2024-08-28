@@ -82,6 +82,7 @@ const movesCalculator = (selectedPiece, pieces) => {
                             return p;
                         }
                     })[0];
+                    console.log(affectedPiece);
                     if (affectedPiece && affectedPiece.owner === selectedPiece.owner) {
                         return;
                     }
@@ -94,6 +95,7 @@ const movesCalculator = (selectedPiece, pieces) => {
                             return p;
                         }
                     })[0];
+                    console.log(affectedPiece);
                     if (affectedPiece && affectedPiece.owner === selectedPiece.owner) {
                         return;
                     }
@@ -106,6 +108,7 @@ const movesCalculator = (selectedPiece, pieces) => {
             })[0];
             if (destination && destination.owner !== selectedPiece.owner) {
                 validMoves.push([newX, newY]);
+                piecesTaken.push(destination);
             }
             if (!destination) {
                 validMoves.push([newX, newY]);
