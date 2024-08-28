@@ -240,6 +240,23 @@ const setPieces = async (socket, data) => {
             pieces: pieces,
         });
 
+        // send game update to room
+        const latestGame = await Game.findOne({ uuid: game.uuid });
+        socket.to(game.uuid).emit("update-game", {
+            status: "success",
+            message: `${socket.username} set pieces`,
+            roomID: game.uuid,
+            game: latestGame,
+        });
+
+        // send game update to current socket
+        socket.emit("update-game", {
+            status: "success",
+            message: "pieces set",
+            roomID: game.uuid,
+            game: latestGame,
+        });
+
     } catch (error) {
         console.log("error setting pieces:", error.toString());
         socket.emit("set-pieces-response", {
