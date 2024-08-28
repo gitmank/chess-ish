@@ -10,7 +10,7 @@ export default function Home() {
                 <p className="text-xl">5x5 chess-like game</p>
                 <p className="text-sm">by Manomay (21BCY10052)</p>
             </div>
-            <Grid size={3} />
+            <Grid size={5} />
             <Navbar />
         </main>
     );
