@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy:
+    name: deploy project to VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+    - name: pull changes into VPS
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          cd /srv/hitwicket_task_Manomay_21BCY10052
+          git pull
+          cd /srv/hitwicket_task_Manomay_21BCY10052/client
+          npm run build
+          pm2 restart all
