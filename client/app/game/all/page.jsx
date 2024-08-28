@@ -19,19 +19,24 @@ export default function Page() {
     }, [isConnected]);
 
     return (
-        <main className="flex flex-col justify-start items-center h-screen w-full text-center p-8">
+        <main className="flex flex-col justify-start items-center h-screen w-screen text-center p-8">
             <h1 className="text-4xl">Your Games</h1>
             <a href="/dashboard" className="underline my-4">
                 Return
             </a>
-            <div className="flex flex-row w-full h-max justify-start items-center gap-4">
+            <div className="flex flex-row flex-wrap w-full h-max justify-start items-center gap-4">
                 {games?.map((game) => (
                     <div
                         key={game.uuid}
-                        className="flex flex-col space-y-4 justify-around items-center h-full w-48 text-center p-4 border border-blue-300 rounded-md"
+                        className="flex flex-col space-y-4 justify-around items-center h-max w-48 text-center p-4 border border-blue-300 rounded-md"
                     >
                         <p>Room: {game.name}</p>
-                        <p>Players: {game.players.join(",")}</p>
+                        <p>Players:</p>
+                        <ul>
+                            {game.players.map((player) => (
+                                <li key={player}>{player}</li>
+                            ))}
+                        </ul>
                         <p>Winner: {game.winner}</p>
                         <p>
                             Started: {new Date(game.startedAt).toLocaleString()}
