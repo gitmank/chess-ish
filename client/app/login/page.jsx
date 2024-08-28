@@ -4,7 +4,7 @@
 import { useAuth } from "@/utilities/hooks/useAuth";
 import Loading from "@/components/views/Loading";
 import Login from "@/components/views/Login";
-import Redirect from "@/components/views/Redirect";
+import Redirect from "@/components/simple/Redirect";
 
 export default function Page() {
     // fetch login status
@@ -12,7 +12,7 @@ export default function Page() {
 
     // redirect if authenticated
     if (status === "authenticated") {
-        return <Redirect page="dashboard" />;
+        return <Redirect to="/dashboard" />;
     }
 
     // render loading page if loading

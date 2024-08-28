@@ -8,6 +8,13 @@ import { useAuth } from "@/utilities/hooks/useAuth";
 import PlayingBoard from "@/components/views/PlayingBoard";
 import Chat from "@/components/views/Chat";
 import { movesCalculator } from "@/utilities/movesCalculator";
+import Redirect from "@/components/simple/Redirect";
+
+const STATUS = {
+    UNAUTHENTICATED: "unauthenticated",
+    AUTHENTICATED: "authenticated",
+    LOADING: "loading",
+};
 
 export default function Page() {
     const { uuid } = useParams();
@@ -64,6 +71,21 @@ export default function Page() {
         gameSocket.emit("set-pieces", { uuid, pieces });
     };
 
+    if (status === STATUS.LOADING) {
+        return (
+            <main className="flex flex-col justify-center items-center h-screen w-screen text-center gap-8">
+                <h1 className="text-2xl">Loading ⏳</h1>
+                <a className="text-lg" href="/">
+                    Return
+                </a>
+            </main>
+        );
+    }
+
+    if (status === STATUS.UNAUTHENTICATED) {
+        return <Redirect to="/login" />;
+    }
+
     if (!game || game?.uuid !== uuid || game?.endedAt) {
         return (
             <main className="grid grid-cols-1 justify-center items-center h-screen w-full text-center">
@@ -71,7 +93,7 @@ export default function Page() {
                     <h1 className="text-4xl">Game</h1>
                     <p>Room: {game?.name}</p>
                     <p>{isConnected ? "🟢 Online" : "🔴 Disconnected"}</p>
-                    <p>Game closed!</p>
+                    <p>Game closed or invalid!</p>
                     <a href="/dashboard" className="underline">
                         Return
                     </a>

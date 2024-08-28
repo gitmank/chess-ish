@@ -13,10 +13,32 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import Redirect from "@/components/simple/Redirect";
+
+const STATUS = {
+    UNAUTHENTICATED: "unauthenticated",
+    AUTHENTICATED: "authenticated",
+    LOADING: "loading",
+};
 
 export default function Page() {
     const router = useRouter();
     const [username, status] = useAuth();
+
+    if (status === STATUS.LOADING) {
+        return (
+            <main className="flex flex-col justify-center items-center h-screen w-screen text-center gap-8">
+                <h1 className="text-2xl">Loading ⏳</h1>
+                <a className="text-lg" href="/">
+                    Return
+                </a>
+            </main>
+        );
+    }
+
+    if (status === STATUS.UNAUTHENTICATED) {
+        return <Redirect to="/login" />;
+    }
 
     return (
         <main className="flex flex-col space-y-8 justify-center items-center h-screen w-screen text-center">
