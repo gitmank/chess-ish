@@ -16,7 +16,18 @@ const KILL_TYPES = {
 
 export const movesCalculator = (selectedPiece, pieces) => {
     const validMoves = [];
-    const allowedMoves = ALLOWED_MOVES[selectedPiece.type];
+    let allowedMoves = ALLOWED_MOVES[selectedPiece.type];
+
+    // filer moves that leave the board
+    allowedMoves = allowedMoves.filter((move) => {
+        const [x, y] = move;
+        const newX = selectedPiece.location[0] + x;
+        const newY = selectedPiece.location[1] + y;
+        if (newX < 0 || newX > 4 || newY < 0 || newY > 4) {
+            return;
+        }
+        return move;
+    });
 
     allowedMoves.forEach((move) => {
         const [x, y] = move;
@@ -24,10 +35,6 @@ export const movesCalculator = (selectedPiece, pieces) => {
         if (KILL_TYPES[selectedPiece.type] === "destination") {
             const newX = selectedPiece.location[0] + x;
             const newY = selectedPiece.location[1] + y;
-            // check destination out of board
-            if (newX < 0 || newX > 4 || newY < 0 || newY > 4) {
-                return;
-            }
             const destination = pieces.filter((p) => {
                 if (p.location[0] === newX && p.location[1] === newY) {
                     return p;
@@ -46,9 +53,6 @@ export const movesCalculator = (selectedPiece, pieces) => {
             // loop from current location to destination
             let newX = selectedPiece.location[0] + x;
             let newY = selectedPiece.location[1] + y;
-            if (newX < 0 || newX > 4 || newY < 0 || newY > 4) {
-                return;
-            }
             if (newX > x) {
                 for (let i = newX; i > x; i--) {
                     const affectedPiece = pieces.filter((p) => {

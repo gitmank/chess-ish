@@ -49,7 +49,6 @@ export default function Page() {
             setPlays([]);
         });
         gameSocket.on("update-game", (data) => {
-            console.log(data.game.currentTurn);
             setGame(data.game);
             setSelectedPiece(null);
             setPlays([]);
@@ -72,7 +71,7 @@ export default function Page() {
                     <h1 className="text-4xl">Game</h1>
                     <p>Room: {game?.name}</p>
                     <p>{isConnected ? "🟢 Online" : "🔴 Disconnected"}</p>
-                    <p>Error fetching game!</p>
+                    <p>Game closed!</p>
                     <a href="/dashboard" className="underline">
                         Return
                     </a>

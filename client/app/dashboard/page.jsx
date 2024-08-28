@@ -48,13 +48,13 @@ export default function Page() {
                             variant="outline"
                             className="w-full h-20 text-lg border-blue-400 border"
                         >
-                            🏆 Your Rank - 0
+                            🏆 Rank - coming soon!
                         </Button>
                         <Button
                             variant="outline"
                             className="w-full h-20 text-lg border-blue-400 border"
                         >
-                            🎲 Games Played - 0
+                            🎲 More - coming soon!
                         </Button>
                     </div>
                     <Button className="mt-8" variant="destructive">

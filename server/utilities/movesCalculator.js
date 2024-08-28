@@ -14,10 +14,21 @@ const KILL_TYPES = {
     H2: "path",
 }
 
-const movesCalculator = (selectedPiece, pieces) => {
-    const validMoves = [];
-    const piecesTaken = [];
-    const allowedMoves = ALLOWED_MOVES[selectedPiece.type];
+const movesCalculator = (selectedPiece, pieces, finalLocation) => {
+    let validMoves = [];
+    let piecesTaken = [];
+    let allowedMoves = ALLOWED_MOVES[selectedPiece.type];
+
+    // filer moves that leave the board
+    allowedMoves = allowedMoves.filter((move) => {
+        const [x, y] = move;
+        const newX = selectedPiece.location[0] + x;
+        const newY = selectedPiece.location[1] + y;
+        if (newX < 0 || newX > 4 || newY < 0 || newY > 4) {
+            return;
+        }
+        return move;
+    });
 
     allowedMoves.forEach((move) => {
         const [x, y] = move;
@@ -25,10 +36,6 @@ const movesCalculator = (selectedPiece, pieces) => {
         if (KILL_TYPES[selectedPiece.type] === "destination") {
             const newX = selectedPiece.location[0] + x;
             const newY = selectedPiece.location[1] + y;
-            // check destination out of board
-            if (newX < 0 || newX > 4 || newY < 0 || newY > 4) {
-                return;
-            }
             const destination = pieces.filter((p) => {
                 if (p.location[0] === newX && p.location[1] === newY) {
                     return p;
@@ -48,9 +55,6 @@ const movesCalculator = (selectedPiece, pieces) => {
             // loop from current location to destination
             let newX = selectedPiece.location[0] + x;
             let newY = selectedPiece.location[1] + y;
-            if (newX < 0 || newX > 4 || newY < 0 || newY > 4) {
-                return;
-            }
             if (newX > x) {
                 for (let i = newX; i > x; i--) {
                     const affectedPiece = pieces.filter((p) => {
@@ -82,7 +86,6 @@ const movesCalculator = (selectedPiece, pieces) => {
                             return p;
                         }
                     })[0];
-                    console.log(affectedPiece);
                     if (affectedPiece && affectedPiece.owner === selectedPiece.owner) {
                         return;
                     }
@@ -95,7 +98,6 @@ const movesCalculator = (selectedPiece, pieces) => {
                             return p;
                         }
                     })[0];
-                    console.log(affectedPiece);
                     if (affectedPiece && affectedPiece.owner === selectedPiece.owner) {
                         return;
                     }
@@ -115,6 +117,54 @@ const movesCalculator = (selectedPiece, pieces) => {
             }
         }
     });
+    if (selectedPiece.location[0] < finalLocation[0]) {
+        for (let i = selectedPiece.location[0]; i < finalLocation[0]; i++) {
+            const affectedPiece = pieces.filter((p) => {
+                if (p.location[0] === i && p.location[1] === finalLocation[1]) {
+                    return p;
+                }
+            })[0];
+            // if friendly piece is in the way, remove move from validMoves
+            if (affectedPiece && affectedPiece.owner === selectedPiece.owner) {
+                validMoves = validMoves.filter((move) => !(move[0] === i && move[1] === finalLocation[1]));
+            }
+            // if enemy piece is in the way, add it to piecesTaken
+            if (affectedPiece && affectedPiece.owner !== selectedPiece.owner) {
+                piecesTaken.push(affectedPiece);
+            }
+        }
+    } else {
+        for (let i = finalLocation[0]; i < selectedPiece.location[0]; i++) {
+            const affectedPiece = pieces.filter((p) => {
+                if (p.location[0] === i && p.location[1] === finalLocation[1]) {
+                    return p;
+                }
+            })[0];
+            // if friendly piece is in the way, remove move from validMoves
+            if (affectedPiece && affectedPiece.owner === selectedPiece.owner) {
+                validMoves = validMoves.filter((move) => !(move[0] === i && move[1] === finalLocation[1]));
+            }
+            // if enemy piece is in the way, add it to piecesTaken
+            if (affectedPiece && affectedPiece.owner !== selectedPiece.owner) {
+                piecesTaken.push(affectedPiece);
+            }
+        }
+    }
+    for (let i = selectedPiece.location[1]; i < finalLocation[1]; i++) {
+        const affectedPiece = pieces.filter((p) => {
+            if (p.location[0] === finalLocation[0] && p.location[1] === i) {
+                return p;
+            }
+        })[0];
+        // if friendly piece is in the way, remove move from validMoves
+        if (affectedPiece && affectedPiece.owner === selectedPiece.owner) {
+            validMoves = validMoves.filter((move) => !(move[0] === finalLocation[0] && move[1] === i));
+        }
+        // if enemy piece is in the way, add it to piecesTaken
+        if (affectedPiece && affectedPiece.owner !== selectedPiece.owner) {
+            piecesTaken.push(affectedPiece);
+        }
+    }
     return [validMoves, piecesTaken];
 };
 

@@ -348,9 +348,12 @@ const makeMove = async (socket, data) => {
 
         // check if move is valid
         const pieces = await Piece.find({ game: game.uuid });
-        const [moves, piecesTaken] = movesCalculator(piece, pieces);
+        const [moves, piecesTaken] = movesCalculator(piece, pieces, data.location);
         piecesTaken.map(async (piece) => {
             if (piece.location[0] === data.location[0] && piece.location[1] === data.location[1]) {
+                await Piece.deleteOne(piece);
+            }
+            if (data.piece.type === "H1" && piece.owner !== socket.username) {
                 await Piece.deleteOne(piece);
             }
         })
@@ -367,9 +370,31 @@ const makeMove = async (socket, data) => {
         // update piece location
         await Piece.updateOne({ game: game.uuid, name: piece.name, owner: piece.owner }, { location: data.location });
 
+        const latestPieces = await Piece.find({ game: game.uuid });
+        // find playerOne piece count
+        const playerOnePieces = latestPieces.filter(p => p.owner === game.players[0]);
+        const playerTwoPieces = latestPieces.filter(p => p.owner === game.players[1]);
+
         // update game turn
         const nextTurn = game.players.filter(p => p !== game.currentTurn)[0];
         await Game.updateOne({ uuid: data.uuid }, { currentTurn: nextTurn });
+
+        if (playerOnePieces.length === 0) {
+            await Game.updateOne({ uuid: data.uuid }, { endedAt: new Date().toISOString(), winner: game.players[1] });
+            socket.emit("make-move-response", {
+                status: "error",
+                message: `${game.players[1]} won`,
+                roomID: data.uuid,
+            });
+        }
+        if (playerTwoPieces.length === 0) {
+            await Game.updateOne({ uuid: data.uuid }, { endedAt: new Date().toISOString(), winner: game.players[0] });
+            socket.emit("make-move-response", {
+                status: "error",
+                message: `${game.players[0]} won`,
+                roomID: data.uuid,
+            });
+        }
 
         // send response
         socket.emit("make-move-response", {
@@ -377,8 +402,6 @@ const makeMove = async (socket, data) => {
             message: "move made",
             roomID: data.uuid,
         });
-
-        const latestPieces = await Piece.find({ game: game.uuid });
 
         // send update to current socket 
         socket.emit("update-pieces", {
