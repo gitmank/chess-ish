@@ -18,7 +18,7 @@ export const movesCalculator = (selectedPiece, pieces) => {
     const validMoves = [];
     let allowedMoves = ALLOWED_MOVES[selectedPiece.type];
 
-    // filer moves that leave the board
+    // filter moves that leave the board
     allowedMoves = allowedMoves.filter((move) => {
         const [x, y] = move;
         const newX = selectedPiece.location[0] + x;

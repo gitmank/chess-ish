@@ -19,7 +19,7 @@ const movesCalculator = (selectedPiece, pieces, finalLocation) => {
     let piecesTaken = [];
     let allowedMoves = ALLOWED_MOVES[selectedPiece.type];
 
-    // filer moves that leave the board
+    // filter moves that leave the board
     allowedMoves = allowedMoves.filter((move) => {
         const [x, y] = move;
         const newX = selectedPiece.location[0] + x;
