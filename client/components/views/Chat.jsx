@@ -30,20 +30,20 @@ export default function Chat({ gameSocket, game }) {
     };
 
     return (
-        <div className="flex flex-col justify-around items-center h-full space-y-4 mt-4 md:border-l pl-4 border-dashed border-gray-500">
+        <div className="flex flex-col justify-between items-center h-full space-y-4 mt-4 md:border-l md:pl-4 border-dashed border-gray-500 w-full">
             <div className="space-y-2 self-center flex flex-col">
                 <h2 className="text-2xl">Chat</h2>
                 <p className="text-xs">disappearing mode</p>
             </div>
-            <div className="flex flex-col space-y-2 self-start gap-2">
+            <div className="flex flex-col space-y-2 self-start gap-2 overflow-y-auto max-h-60 w-full">
                 {messages.map((m, i) => (
-                    <div key={i} className="flex flex-col text-left">
-                        <p className="font-bold">{m.username}:</p>
-                        <p className="text-left">{m.message}</p>
+                    <div key={i} className="bg-gray-700 p-2 rounded-md w-full">
+                        <p className="font-semibold">{m.username}:</p>
+                        <p className="text-sm break-words">{m.message}</p>
                     </div>
                 ))}
             </div>
-            <form onSubmit={sendMessage} className="flex space-x-2">
+            <form onSubmit={sendMessage} className="flex space-x-2 w-full">
                 <input
                     type="text"
                     value={message}

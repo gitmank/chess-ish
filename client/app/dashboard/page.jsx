@@ -14,6 +14,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import Redirect from "@/components/simple/Redirect";
+import Container from "@/components/simple/Container";
 
 const STATUS = {
     UNAUTHENTICATED: "unauthenticated",
@@ -27,7 +28,7 @@ export default function Page() {
 
     if (status === STATUS.LOADING) {
         return (
-            <main className="flex flex-col justify-center items-center h-screen w-screen text-center gap-8">
+            <main className="flex flex-col justify-center items-center min-h-screen w-full text-center gap-8 p-4">
                 <h1 className="text-2xl">Loading ⏳</h1>
                 <a className="text-lg" href="/">
                     Return
@@ -41,16 +42,17 @@ export default function Page() {
     }
 
     return (
-        <main className="flex flex-col space-y-8 justify-center items-center h-screen w-screen text-center">
-            <h1 className="text-4xl">Dashboard</h1>
-            <Card className="min-w-72 min-h-1/2 h-max w-1/2">
-                <CardHeader>
-                    <CardTitle className="text-xl">Hi {username} 👋</CardTitle>
-                    <CardDescription>
-                        you can manage your account here!
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+        <main className="py-12">
+            <Container className="flex flex-col space-y-8 items-center text-center">
+                <h1 className="text-4xl font-bold">Dashboard</h1>
+                <Card className="w-full shadow-lg">
+                    <CardHeader>
+                        <CardTitle className="text-xl">Hi {username} 👋</CardTitle>
+                        <CardDescription>
+                            you can manage your account here!
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center gap-4">
                         <Button
                             variant="link"
@@ -82,8 +84,9 @@ export default function Page() {
                     <Button className="mt-8" variant="destructive">
                         Logout
                     </Button>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </Container>
         </main>
     );
 }

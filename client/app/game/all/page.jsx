@@ -3,6 +3,7 @@
 // import hooks
 import { useState, useEffect } from "react";
 import { useGameSocket } from "@/utilities/hooks/useGameSocket";
+import Container from "@/components/simple/Container";
 
 export default function Page() {
     const [isConnected, gameSocket] = useGameSocket();
@@ -19,18 +20,19 @@ export default function Page() {
     }, [isConnected]);
 
     return (
-        <main className="flex flex-col justify-start items-center h-screen w-screen text-center p-8">
-            <h1 className="text-4xl">Your Games</h1>
-            <a href="/dashboard" className="underline my-4">
-                Return
-            </a>
-            <div className="flex flex-row flex-wrap w-full h-max justify-start items-center gap-4">
-                {games?.map((game) => (
-                    <div
-                        key={game.uuid}
-                        className="flex flex-col space-y-4 justify-around items-center h-max w-48 text-center p-4 border border-blue-300 rounded-md"
-                    >
-                        <p>Room: {game.name}</p>
+        <main className="py-12">
+            <Container className="flex flex-col items-center space-y-6 text-center">
+                <h1 className="text-4xl font-bold">Your Games</h1>
+                <a href="/dashboard" className="underline">
+                    Return
+                </a>
+                <div className="flex flex-row flex-wrap w-full justify-start items-stretch gap-4">
+                    {games?.map((game) => (
+                        <div
+                            key={game.uuid}
+                            className="flex flex-col space-y-4 justify-around items-center h-max w-48 text-center p-4 border border-blue-300 rounded-md shadow"
+                        >
+                            <p>Room: {game.name}</p>
                         <p>Players:</p>
                         <ul>
                             {game.players.map((player) => (
@@ -71,7 +73,8 @@ export default function Page() {
                         }
                     </div>
                 ))}
-            </div>
+                </div>
+            </Container>
         </main>
     );
 }
