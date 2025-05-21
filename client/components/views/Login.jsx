@@ -13,6 +13,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import Container from "@/components/simple/Container";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -66,8 +67,9 @@ export default function Login() {
 
     // render auth form
     return (
-        <main className="flex justify-center items-center h-screen w-screen">
-            <Card className="min-w-72 w-1/4">
+        <main className="flex justify-center items-center min-h-screen p-4">
+            <Container className="w-full">
+            <Card className="w-full shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-2xl">Login</CardTitle>
                     <CardDescription>
@@ -134,6 +136,7 @@ export default function Login() {
                     }
                 </CardContent>
             </Card>
+            </Container>
         </main>
     );
 }

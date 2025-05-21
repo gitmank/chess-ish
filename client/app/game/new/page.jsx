@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameSocket } from "@/utilities/hooks/useGameSocket";
+import Container from "@/components/simple/Container";
 
 const STATUS = {
     DEFAULT: "default",
@@ -49,14 +50,14 @@ export default function Page() {
     };
 
     return (
-        <main className="grid grid-cols-1 justify-center items-center h-screen w-full text-center">
-            <div className="flex flex-col space-y-8 justify-center items-center h-full w-full text-center border-b">
-                <h1 className="text-4xl">New Game</h1>
+        <main className="py-12">
+            <Container className="flex flex-col space-y-8 justify-center items-center text-center">
+                <h1 className="text-4xl font-bold">New Game</h1>
                 <p>{isConnected ? "🟢 Online" : "🔴 Disconnected"}</p>
                 <input
                     id="room-name"
                     type="text"
-                    className="rounded-md p-2 text-black"
+                    className="rounded-md p-2 text-black w-full max-w-sm"
                     placeholder="room name"
                 />
                 <Button
@@ -93,7 +94,7 @@ export default function Page() {
                 <a className="underline" href="/dashboard">
                     Return
                 </a>
-            </div>
+            </Container>
         </main>
     );
 }

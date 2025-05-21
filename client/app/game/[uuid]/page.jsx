@@ -9,6 +9,7 @@ import PlayingBoard from "@/components/views/PlayingBoard";
 import Chat from "@/components/views/Chat";
 import { movesCalculator } from "@/utilities/movesCalculator";
 import Redirect from "@/components/simple/Redirect";
+import Container from "@/components/simple/Container";
 
 const STATUS = {
     UNAUTHENTICATED: "unauthenticated",
@@ -73,11 +74,13 @@ export default function Page() {
 
     if (status === STATUS.LOADING) {
         return (
-            <main className="flex flex-col justify-center items-center h-screen w-screen text-center gap-8">
-                <h1 className="text-2xl">Loading ⏳</h1>
-                <a className="text-lg" href="/">
-                    Return
-                </a>
+            <main className="flex flex-col justify-center items-center min-h-screen p-4">
+                <Container className="space-y-8 text-center">
+                    <h1 className="text-2xl">Loading ⏳</h1>
+                    <a className="text-lg" href="/">
+                        Return
+                    </a>
+                </Container>
             </main>
         );
     }
@@ -88,8 +91,8 @@ export default function Page() {
 
     if (!game || game?.uuid !== uuid || game?.endedAt) {
         return (
-            <main className="grid grid-cols-1 justify-center items-center h-screen w-full text-center">
-                <div className="flex flex-col space-y-8 justify-center items-center h-full w-full text-center border-b">
+            <main className="flex justify-center items-center min-h-screen p-4 text-center">
+                <Container className="space-y-8">
                     <h1 className="text-4xl">Game</h1>
                     <p>Room: {game?.name}</p>
                     <p>{isConnected ? "🟢 Online" : "🔴 Disconnected"}</p>
@@ -97,15 +100,15 @@ export default function Page() {
                     <a href="/dashboard" className="underline">
                         Return
                     </a>
-                </div>
+                </Container>
             </main>
         );
     }
 
     if (game.moves.length < 10) {
         return (
-            <main className="flex flex-col justify-center items-center h-screen w-full p-4 text-center">
-                <div className="flex flex-col space-y-8 justify-center items-center h-full w-full text-center border-b">
+            <main className="flex flex-col justify-center items-center min-h-screen p-4 text-center">
+                <Container className="space-y-8">
                     <h1 className="text-4xl">Game</h1>
                     <p>Room: {game?.name}</p>
                     <p>{isConnected ? "🟢 Online" : "🔴 Disconnected"}</p>
@@ -113,18 +116,19 @@ export default function Page() {
                     <a href="/dashboard" className="underline">
                         Return
                     </a>
-                </div>
-                {pieces.filter((p) => p.owner === username).length !== 5 ? (
-                    <PieceSetter submitPieces={submitPieces} />
-                ) : (
-                    <PieceWaiting pieces={pieces} />
-                )}
+                    {pieces.filter((p) => p.owner === username).length !== 5 ? (
+                        <PieceSetter submitPieces={submitPieces} />
+                    ) : (
+                        <PieceWaiting pieces={pieces} />
+                    )}
+                </Container>
             </main>
         );
     }
 
     return (
-        <main className="grid grid-cols-1 md:grid-cols-[1fr_300px] h-screen w-full text-center p-4">
+        <main className="py-8">
+            <Container className="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
             <div className="flex flex-col justify-center items-center h-full w-full text-center gap-4">
                 <h1 className="text-4xl">Game</h1>
                 <p>
@@ -194,6 +198,7 @@ export default function Page() {
                     )}
             </div>
             <Chat gameSocket={gameSocket} game={game} />
+            </Container>
         </main>
     );
 }
